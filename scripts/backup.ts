@@ -1,5 +1,5 @@
 // ABOUTME: Database backup utility using pg_dump
-// ABOUTME: Creates timestamped SQL backups of the Epstein Files database
+// ABOUTME: Creates timestamped SQL backups of the document database
 
 import { execSync } from 'child_process'
 import { existsSync, mkdirSync } from 'fs'

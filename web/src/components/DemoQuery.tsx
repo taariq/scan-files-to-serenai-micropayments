@@ -1,4 +1,4 @@
-// ABOUTME: Interactive demo component for querying the Epstein Files database
+// ABOUTME: Interactive demo component for querying document databases
 // ABOUTME: Demonstrates x402 micropayment flow with wallet address and SQL query inputs
 
 import { Component, createSignal } from 'solid-js'
@@ -24,9 +24,9 @@ const DemoQuery: Component = () => {
 
   const exampleQueries = [
     "SELECT * FROM documents LIMIT 10",
-    "SELECT * FROM pages WHERE content ILIKE '%Epstein%' LIMIT 5",
+    "SELECT * FROM pages WHERE content ILIKE '%keyword%' LIMIT 5",
     "SELECT document_filename, COUNT(*) as page_count FROM pages GROUP BY document_filename",
-    "SELECT * FROM documents WHERE source_url LIKE '%oversight.house.gov%'"
+    "SELECT * FROM documents WHERE source_file LIKE '%.pdf'"
   ]
 
   const executeQuery = async () => {
@@ -73,7 +73,7 @@ const DemoQuery: Component = () => {
       <header class="demo-header">
         <h2>Try a Query</h2>
         <p class="demo-intro">
-          Experience the x402 micropayment flow by querying the Epstein Files database.
+          Experience the x402 micropayment flow by querying document databases.
           Enter your Ethereum wallet address and a SQL query to get started.
         </p>
       </header>

@@ -71,7 +71,7 @@ export function processFile(inputPath: string, outputPath: string): void {
 
 // CLI entry point
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const sourceDir = process.argv[2] || '../docs/Epstein_Files'
+  const sourceDir = process.argv[2] || '../docs/Documents'
   const outputDir = process.argv[3] || '../extracted'
 
   console.log('Starting document extraction...')

@@ -4,9 +4,9 @@ const LandingPage: Component = () => {
   return (
     <div class="landing-page">
       <header class="hero">
-        <h1>Epstein Files Database</h1>
+        <h1>Scan Files to SerenAI</h1>
         <p class="tagline">
-          Query congressional oversight documents via x402 micropayments
+          Query document databases via x402 micropayments
         </p>
       </header>
 
@@ -14,11 +14,10 @@ const LandingPage: Component = () => {
         <h2>About This Project</h2>
         <p>
           This open-source application demonstrates SerenAI's micropayment capabilities
-          by providing queryable access to Epstein Files documents released by the House
-          Oversight Committee.
+          by providing queryable access to document databases.
         </p>
         <p>
-          The documents have been extracted from images and PDFs using OCR technology and
+          Documents are extracted from images and PDFs using OCR technology and
           stored in SerenDB, making them searchable and accessible through SQL queries with
           micropayment integration.
         </p>
@@ -30,7 +29,7 @@ const LandingPage: Component = () => {
           <div class="step">
             <h3>1. Extract & Upload</h3>
             <p>
-              Documents are extracted from oversight committee archives using OCR tools
+              Documents are extracted from PDFs and images using OCR tools
               and uploaded to SerenDB (PostgreSQL-compatible database).
             </p>
           </div>
@@ -80,29 +79,16 @@ const LandingPage: Component = () => {
       </section>
 
       <section class="source-info">
-        <h2>Document Sources</h2>
+        <h2>Getting Started</h2>
         <p>
-          All documents are from official House Oversight Committee releases:
+          Fork this project and upload your own documents to create a queryable database:
         </p>
         <ul>
-          <li>
-            <a
-              href="https://oversight.house.gov/release/oversight-committee-releases-epstein-records-provided-by-the-department-of-justice/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Epstein Records from DOJ
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://oversight.house.gov/release/oversight-committee-releases-additional-epstein-estate-documents/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Additional Epstein Estate Documents
-            </a>
-          </li>
+          <li>Place PDFs and images in the <code>docs/Documents/</code> folder</li>
+          <li>Run the extraction script to process documents with OCR</li>
+          <li>Upload extracted content to your SerenDB instance</li>
+          <li>Register your database as an x402 payment provider</li>
+          <li>Query via MCP server or web interface</li>
         </ul>
       </section>
 

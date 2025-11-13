@@ -58,7 +58,7 @@ PROVIDER_WALLET_ADDRESS=0x...
 
 ### 5. Upload and Process Documents
 
-1. Place your PDF/image files in [docs/Epstein_Files/](docs/Epstein_Files/)
+1. Place your PDF/image files in [docs/Documents/](docs/Documents/)
 2. Extract text and upload to database:
 
 ```bash
@@ -173,7 +173,7 @@ pnpm test          # Run tests
 ```
 scan-files-to-serenai-micropayments/
 ├── docs/
-│   └── Epstein_Files/       # Upload your documents here
+│   └── Documents/           # Upload your documents here
 ├── scripts/
 │   ├── extract.ts           # OCR and text extraction
 │   ├── upload.ts            # Upload to SerenDB

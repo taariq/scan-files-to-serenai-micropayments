@@ -1,4 +1,4 @@
-// ABOUTME: Registers Epstein Files database as x402 payment provider
+// ABOUTME: Registers document database as x402 payment provider
 // ABOUTME: Configures pricing model for micropayment queries
 
 import dotenv from 'dotenv'
@@ -40,7 +40,7 @@ export async function registerProvider(email: string): Promise<RegistrationResul
   const connectionString = process.env.SERENDB_CONNECTION_STRING!
 
   const registration: ProviderRegistration = {
-    name: 'Epstein Files Database',
+    name: 'Document Database',
     email,
     walletAddress,
     connectionString

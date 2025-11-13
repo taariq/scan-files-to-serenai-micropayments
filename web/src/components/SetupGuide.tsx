@@ -5,7 +5,7 @@ const SetupGuide: Component = () => {
     <div class="setup-guide">
       <h1>Setup Guide</h1>
       <p class="intro">
-        Follow these steps to connect your LLM (like Claude Desktop) to query the Epstein Files database via micropayments.
+        Follow these steps to connect your LLM (like Claude Desktop) to query document databases via micropayments.
       </p>
 
       <section class="setup-section">
@@ -76,7 +76,7 @@ const SetupGuide: Component = () => {
 
       <section class="setup-section">
         <h2>3. Configure Claude Desktop</h2>
-        <p>Add the Epstein Files MCP server to your Claude Desktop configuration:</p>
+        <p>Add the Scan Files MCP server to your Claude Desktop configuration:</p>
 
         <div class="step-item">
           <h4>Locate Configuration File</h4>
@@ -94,14 +94,14 @@ const SetupGuide: Component = () => {
 
         <div class="step-item">
           <h4>Add MCP Server</h4>
-          <p>Edit the configuration file and add the Epstein Files server:</p>
+          <p>Edit the configuration file and add the Scan Files server:</p>
           <div class="code-block">
             <code>
               {JSON.stringify({
                 "mcpServers": {
-                  "epstein-files": {
+                  "scan-files": {
                     "command": "node",
-                    "args": ["/path/to/epstein-files-micropayments/mcp-server/dist/index.js"],
+                    "args": ["/path/to/scan-files-to-serenai-micropayments/mcp-server/dist/index.js"],
                     "env": {
                       "X402_GATEWAY_URL": "https://x402.serendb.com",
                       "X402_PROVIDER_ID": "your-provider-id",
@@ -117,7 +117,7 @@ const SetupGuide: Component = () => {
         <div class="step-item">
           <h4>Restart Claude Desktop</h4>
           <p>
-            Close and reopen Claude Desktop. The Epstein Files MCP server should now be
+            Close and reopen Claude Desktop. The Scan Files MCP server should now be
             available with the <code>execute_query</code> tool.
           </p>
         </div>
@@ -225,7 +225,7 @@ const SetupGuide: Component = () => {
           <h4>Example Prompt</h4>
           <div class="code-block prompt-example">
             <code>
-              Use the execute_query tool to search the Epstein Files database<br />
+              Use the execute_query tool to search the document database<br />
               for any mentions of "private jet" or "aircraft". Use my wallet<br />
               address: 0x1234567890abcdef1234567890abcdef12345678
             </code>

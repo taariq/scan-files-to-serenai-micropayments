@@ -1,8 +1,9 @@
 # Claude Code guidance file (user-specific)
 CLAUDE.md
 
-# Epstein Files - source documents not to be pushed to repo
-docs/Epstein_Files/
+# Source documents - not pushed to repo (except README)
+docs/Documents/*
+!docs/Documents/README.md
 
 # Implementation plans (user-specific)
 docs/plans/

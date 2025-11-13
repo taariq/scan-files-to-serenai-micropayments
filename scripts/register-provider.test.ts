@@ -38,7 +38,7 @@ describe('Provider Registration', () => {
       expect.objectContaining({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: expect.stringContaining('Epstein Files Database')
+        body: expect.stringContaining('Document Database')
       })
     )
     expect(result.provider.id).toBe('test-provider-id')

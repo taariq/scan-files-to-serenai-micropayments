@@ -1,4 +1,4 @@
--- ABOUTME: Database schema for Epstein Files content storage
+-- ABOUTME: Database schema for document content storage
 -- ABOUTME: Two-table design: documents (metadata) and pages (OCR content)
 
 -- Drop existing tables if recreating
@@ -36,6 +36,6 @@ CREATE INDEX idx_documents_source_file ON documents(source_file);
 
 -- Create read-only user for query access
 -- NOTE: Replace 'GENERATE_SECURE_PASSWORD' with actual secure password
--- CREATE USER epstein_reader WITH PASSWORD 'GENERATE_SECURE_PASSWORD';
--- GRANT CONNECT ON DATABASE epstein_files TO epstein_reader;
--- GRANT SELECT ON documents, pages TO epstein_reader;
+-- CREATE USER docs_reader WITH PASSWORD 'GENERATE_SECURE_PASSWORD';
+-- GRANT CONNECT ON DATABASE documents_db TO docs_reader;
+-- GRANT SELECT ON documents, pages TO docs_reader;
