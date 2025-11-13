@@ -1,11 +1,11 @@
 {
-  "name": "@epstein-files/mcp-server",
+  "name": "@scan-files/mcp-server",
   "version": "1.0.0",
-  "description": "MCP server for querying Epstein Files via x402 micropayments",
+  "description": "MCP server for querying document databases via x402 micropayments",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "epstein-mcp": "dist/index.js"
+    "scan-files-mcp": "dist/index.js"
   },
   "scripts": {
     "build": "tsc",

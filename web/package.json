@@ -1,7 +1,7 @@
 {
-  "name": "@epstein-files/web",
+  "name": "@scan-files/web",
   "version": "1.0.0",
-  "description": "SolidJS web app for Epstein Files micropayment queries",
+  "description": "SolidJS web app for document database micropayment queries",
   "type": "module",
   "scripts": {
     "dev": "vite",

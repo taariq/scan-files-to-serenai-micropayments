@@ -1,4 +1,4 @@
-# Epstein Files Micropayments
+# Scan Files to SerenAI Micropayments
 
 Query document databases using AI agents with micropayments powered by [SerenAI](https://serendb.com) and x402.
 
@@ -13,8 +13,8 @@ This application demonstrates how to:
 ### 1. Fork and Clone
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/epstein-files-micropayments.git
-cd epstein-files-micropayments
+git clone https://github.com/YOUR_USERNAME/scan-files-to-serenai-micropayments.git
+cd scan-files-to-serenai-micropayments
 pnpm install
 ```
 
@@ -100,7 +100,7 @@ Add to Claude Desktop config (`~/Library/Application Support/Claude/claude_deskt
 ```json
 {
   "mcpServers": {
-    "epstein-files": {
+    "scan-files": {
       "command": "node",
       "args": ["/full/path/to/mcp-server/dist/index.js"],
       "env": {
@@ -171,7 +171,7 @@ pnpm test          # Run tests
 ## Project Structure
 
 ```
-epstein-files-micropayments/
+scan-files-to-serenai-micropayments/
 ├── docs/
 │   └── Epstein_Files/       # Upload your documents here
 ├── scripts/
@@ -192,7 +192,7 @@ epstein-files-micropayments/
 
 This codebase is designed to be forked and customized:
 
-1. **Different Documents**: Replace Epstein Files with any PDFs/images
+1. **Different Documents**: Use any PDFs/images you want to scan and query
 2. **Custom Schema**: Modify [scripts/schema.sql](scripts/schema.sql) for your data model
 3. **Query Tools**: Add custom MCP tools in [mcp-server/src/tools/](mcp-server/src/tools/)
 4. **Web UI**: Build custom interfaces in [web/](web/) using SolidJS
@@ -230,9 +230,9 @@ This codebase is designed to be forked and customized:
 
 ## Support
 
-- **Issues**: [github.com/YOUR_USERNAME/epstein-files-micropayments/issues](https://github.com/YOUR_USERNAME/epstein-files-micropayments/issues)
+- **Issues**: [github.com/YOUR_USERNAME/scan-files-to-serenai-micropayments/issues](https://github.com/YOUR_USERNAME/scan-files-to-serenai-micropayments/issues)
 - **SerenDB Support**: [console.serendb.com/support](https://console.serendb.com/support)
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
+Apache License 2.0 - see [LICENSE](LICENSE) for details.

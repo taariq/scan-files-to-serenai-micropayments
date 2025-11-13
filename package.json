@@ -1,7 +1,7 @@
 {
-  "name": "epstein-files-micropayments",
+  "name": "scan-files-to-serenai-micropayments",
   "version": "1.0.0",
-  "description": "Query Epstein Files documents using AI agents with micropayments",
+  "description": "Query document databases using AI agents with micropayments",
   "private": true,
   "packageManager": "pnpm@10.22.0",
   "scripts": {

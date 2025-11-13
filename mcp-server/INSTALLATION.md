@@ -1,6 +1,6 @@
 # MCP Server Installation Guide
 
-The Epstein Files MCP server allows Claude Desktop to query the Epstein Files database through x402 micropayments.
+The Scan Files MCP server allows Claude Desktop to query document databases through x402 micropayments.
 
 **Important:** This server runs **locally on your machine**, not on a remote server. It integrates with Claude Desktop through the Model Context Protocol (MCP).
 
@@ -17,8 +17,8 @@ The Epstein Files MCP server allows Claude Desktop to query the Epstein Files da
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/taariq/epstein-files-micropayments.git
-cd epstein-files-micropayments/mcp-server
+git clone https://github.com/taariq/scan-files-to-serenai-micropayments.git
+cd scan-files-to-serenai-micropayments/mcp-server
 ```
 
 ### 2. Install Dependencies
@@ -71,10 +71,10 @@ Add the MCP server configuration:
 ```json
 {
   "mcpServers": {
-    "epstein-files": {
+    "scan-files": {
       "command": "node",
       "args": [
-        "/absolute/path/to/epstein-files-micropayments/mcp-server/dist/index.js"
+        "/absolute/path/to/scan-files-to-serenai-micropayments/mcp-server/dist/index.js"
       ],
       "env": {
         "X402_GATEWAY_URL": "https://x402.serendb.com",
@@ -89,7 +89,7 @@ Add the MCP server configuration:
 **Important:**
 - Use the **absolute path** to `dist/index.js` on your system
 - Replace `your-provider-id` and `your-api-key` with your actual credentials
-- The server name `epstein-files` can be customized
+- The server name `scan-files` can be customized
 
 ### 6. Restart Claude Desktop
 
@@ -119,16 +119,16 @@ Use the execute_query tool to query the Epstein Files database:
 
 ## Usage
 
-Once installed, you can query the Epstein Files database from Claude Desktop:
+Once installed, you can query document databases from Claude Desktop:
 
 **Example prompts:**
 
 ```
-Query the Epstein Files database for all documents
+Query the database for all documents
 ```
 
 ```
-Search the Epstein Files for mentions of "JP Morgan" using my wallet address 0x...
+Search the documents for mentions of "keyword" using my wallet address 0x...
 ```
 
 ```
@@ -215,11 +215,11 @@ Restart Claude Desktop after updating.
 
 ## Uninstalling
 
-1. Remove the `epstein-files` entry from your Claude Desktop configuration file
+1. Remove the `scan-files` entry from your Claude Desktop configuration file
 2. Restart Claude Desktop
 3. Optionally, delete the cloned repository:
    ```bash
-   rm -rf epstein-files-micropayments
+   rm -rf scan-files-to-serenai-micropayments
    ```
 
 ## Security Notes
@@ -232,7 +232,7 @@ Restart Claude Desktop after updating.
 ## Support
 
 For issues, questions, or contributions:
-- **GitHub Issues:** https://github.com/taariq/epstein-files-micropayments/issues
+- **GitHub Issues:** https://github.com/taariq/scan-files-to-serenai-micropayments/issues
 - **Documentation:** See main README.md
 
 ## Architecture

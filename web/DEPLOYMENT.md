@@ -1,4 +1,4 @@
-# Deployment Guide - Epstein Files Web App
+# Deployment Guide - Scan Files to SerenAI Web App
 
 ## Deploying to Vercel
 
@@ -39,12 +39,12 @@ This is an open-source project. Anyone can deploy their own instance to Vercel (
 
 5. **Follow the prompts**:
    - Link to existing project or create new? → **Create new** (for first deployment)
-   - Project name: **epstein-files-micropayments** (or your preferred name)
+   - Project name: **scan-files-micropayments** (or your preferred name)
    - Which directory contains code? → **.** (current directory)
    - Want to override settings? → **No**
 
 6. **Verify deployment**:
-   - Visit the provided URL (e.g., `https://epstein-files-micropayments.vercel.app`)
+   - Visit the provided URL (e.g., `https://scan-files-micropayments.vercel.app`)
    - Check that all components render correctly
    - Test the demo query functionality
 
@@ -60,12 +60,12 @@ This is an open-source project. Anyone can deploy their own instance to Vercel (
    - Click "Add New..." button (top-right)
    - Select "Project" from the dropdown
    - Connect to your GitHub account if not already connected
-   - Search for: `epstein-files-micropayments` (or your fork)
+   - Search for: `scan-files-to-serenai-micropayments` (or your fork)
    - Click "Import" on the repository
    - If you don't see it, configure GitHub App permissions to allow access
 
 4. **Configure Project**:
-   - **Project Name**: `epstein-files-micropayments` (or customize)
+   - **Project Name**: `scan-files-micropayments` (or customize)
    - **Framework Preset**: Vite (should auto-detect)
    - **Root Directory**: `web` ← **IMPORTANT:** Change from default `.`
    - **Build Command**: `pnpm build` (default is fine)
@@ -107,7 +107,7 @@ Once connected to GitHub:
 
 To add a custom domain:
 1. Go to Project Settings → Domains
-2. Add your domain (e.g., `epstein-files.volume.com`)
+2. Add your domain (e.g., `scan-files.volume.com`)
 3. Configure DNS according to Vercel's instructions
 
 ### Troubleshooting
