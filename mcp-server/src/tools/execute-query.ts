@@ -1,4 +1,4 @@
-// ABOUTME: MCP tool for executing SQL queries on Epstein Files database
+// ABOUTME: MCP tool for executing SQL queries on document databases
 // ABOUTME: Handles micropayment flows and returns formatted results to LLMs
 
 import { X402Client, QueryResult } from '../x402-client'
@@ -25,13 +25,13 @@ export interface ExecuteQueryResult {
 
 export const executeQueryTool = {
   name: 'execute_query',
-  description: 'Execute SQL queries on the Epstein Files database via x402 micropayments. Query the documents and pages tables to search through extracted text from oversight committee files.',
+  description: 'Execute SQL queries on document databases via x402 micropayments. Query the documents and pages tables to search through extracted text content.',
   inputSchema: {
     type: 'object',
     properties: {
       query: {
         type: 'string',
-        description: 'SQL SELECT query to execute. Only SELECT queries are allowed. Example: SELECT * FROM documents WHERE source_file LIKE \'%epstein%\' LIMIT 10'
+        description: 'SQL SELECT query to execute. Only SELECT queries are allowed. Example: SELECT * FROM documents WHERE source_file LIKE \'%.pdf\' LIMIT 10'
       },
       walletAddress: {
         type: 'string',

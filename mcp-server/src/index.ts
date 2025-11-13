@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// ABOUTME: MCP server entry point for Epstein Files database queries
+// ABOUTME: MCP server entry point for document database queries
 // ABOUTME: Exposes execute_query tool via stdio transport for LLM integration
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js'
@@ -37,7 +37,7 @@ const executeQueryHandler = createExecuteQueryHandler(x402Client)
 // Create MCP server
 const server = new Server(
   {
-    name: 'epstein-files-mcp',
+    name: 'scan-files-mcp',
     version: '1.0.0',
   },
   {
@@ -75,7 +75,7 @@ async function main() {
   const transport = new StdioServerTransport()
   await server.connect(transport)
 
-  console.error('Epstein Files MCP server running on stdio')
+  console.error('Scan Files MCP server running on stdio')
 }
 
 main().catch((error) => {
