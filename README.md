@@ -58,7 +58,7 @@ PROVIDER_WALLET_ADDRESS=0x...
 
 ### 5. Upload and Process Documents
 
-1. Place your PDF/image files in [docs/Documents/](docs/Documents/)
+1. Place your PDF/image files in [uploads/](uploads/)
 2. Extract text and upload to database:
 
 ```bash

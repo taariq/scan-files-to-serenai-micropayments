@@ -1,11 +1,12 @@
 # Claude Code guidance file (user-specific)
 CLAUDE.md
 
-# Docs folder - keep only Documents/README.md for user guidance
-docs/*
-!docs/Documents/
-docs/Documents/*
-!docs/Documents/README.md
+# Upload folder - keep only README.md for user guidance
+uploads/*
+!uploads/README.md
+
+# Legacy docs folder (deprecated)
+docs/
 
 # Processed files and backups
 extracted/
