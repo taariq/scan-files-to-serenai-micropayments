@@ -4,98 +4,130 @@ const LandingPage: Component = () => {
   return (
     <div class="landing-page">
       <header class="hero">
-        <h1>Scan Files to SerenAI</h1>
+        <h1>Query Document Databases with Micropayments</h1>
         <p class="tagline">
-          Query document databases via x402 micropayments
+          Pay-per-query access to document databases powered by x402
         </p>
       </header>
 
       <section class="about">
-        <h2>About This Project</h2>
+        <h2>What is This?</h2>
         <p>
-          This open-source application demonstrates SerenAI's micropayment capabilities
-          by providing queryable access to document databases.
+          Access searchable document databases using AI assistants like Claude.
+          Pay only for the queries you run - starting at $0.01 per 1000 rows returned.
         </p>
         <p>
-          Documents are extracted from images and PDFs using OCR technology and
-          stored in SerenDB, making them searchable and accessible through SQL queries with
-          micropayment integration.
+          This database contains extracted text from documents, making them searchable
+          via SQL queries with built-in micropayment support.
         </p>
       </section>
 
-      <section class="how-it-works">
-        <h2>How It Works</h2>
+      <section class="quick-start">
+        <h2>Quick Start</h2>
         <div class="steps">
           <div class="step">
-            <h3>1. Extract & Upload</h3>
+            <h3>1. Get a Wallet</h3>
             <p>
-              Documents are extracted from PDFs and images using OCR tools
-              and uploaded to SerenDB (PostgreSQL-compatible database).
+              You'll need a crypto wallet to pay for queries. We recommend:
+            </p>
+            <ul>
+              <li><strong>Coinbase Wallet:</strong> Easy setup, supports Base network</li>
+              <li><strong>MetaMask:</strong> Popular browser extension wallet</li>
+              <li><strong>Rainbow:</strong> Mobile-friendly option</li>
+            </ul>
+            <p>
+              Make sure your wallet supports the <strong>Base network</strong> (Ethereum L2) for low transaction fees.
             </p>
           </div>
+
           <div class="step">
-            <h3>2. Register Provider</h3>
+            <h3>2. Fund Your Wallet</h3>
             <p>
-              The database is registered as an x402 payment provider at the SerenDB gateway,
-              enabling micropayment-gated queries.
+              Add funds to your wallet to pay for queries:
+            </p>
+            <ul>
+              <li>Purchase ETH or USDC through Coinbase, Binance, or your wallet provider</li>
+              <li>Bridge to Base network for minimal fees (optional but recommended)</li>
+              <li>Keep at least $1-5 for multiple queries</li>
+            </ul>
+            <p class="pricing-note">
+              <strong>Pricing:</strong> $0.01 per 1000 rows. Most queries cost less than $0.01.
             </p>
           </div>
+
           <div class="step">
-            <h3>3. Query with Payments</h3>
+            <h3>3. Add MCP Server to Claude</h3>
             <p>
-              LLMs and users can query the database through the MCP server. Each query
-              requires a small micropayment (starting at $0.01 per 1000 rows).
+              Connect this database to Claude Desktop by adding the MCP server to your config:
+            </p>
+            <pre><code>{`{
+  "mcpServers": {
+    "scan-files": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@scan-files/mcp-server"
+      ],
+      "env": {
+        "X402_GATEWAY_URL": "https://x402.serendb.com",
+        "X402_PROVIDER_ID": "4d06389d-32f1-4e4a-a30a-06e783c20c3c",
+        "X402_API_KEY": "seren_live_9a2b6c46057179339b9045f4c5e5ecc7"
+      }
+    }
+  }
+}`}</code></pre>
+            <p class="config-location">
+              Add this to: <code>~/Library/Application Support/Claude/claude_desktop_config.json</code> (macOS)
+              or <code>%APPDATA%/Claude/claude_desktop_config.json</code> (Windows)
             </p>
           </div>
         </div>
       </section>
 
-      <section class="payment-flow">
-        <h2>Payment Flow</h2>
-        <p>
-          Queries are priced based on the amount of data returned:
-        </p>
-        <ul>
-          <li><strong>Base Price:</strong> $0.01 per 1000 rows</li>
-          <li><strong>Example:</strong> A query returning 100 rows costs approximately $0.001</li>
-          <li><strong>Payment Protocol:</strong> x402 (HTTP 402 Payment Required)</li>
-          <li><strong>Wallet:</strong> Ethereum-compatible addresses supported</li>
-        </ul>
-        <p>
-          When a query requires payment, the system returns a payment URL. Complete the
-          payment to execute your query and receive the results.
-        </p>
+      <section class="example-queries">
+        <h2>Example Queries</h2>
+        <p>Once connected, try asking Claude:</p>
+        <div class="query-examples">
+          <div class="query-example">
+            <p class="query-text">"How many documents are in the database?"</p>
+            <code>SELECT COUNT(*) FROM documents</code>
+          </div>
+          <div class="query-example">
+            <p class="query-text">"Show me the first 5 documents"</p>
+            <code>SELECT * FROM documents LIMIT 5</code>
+          </div>
+          <div class="query-example">
+            <p class="query-text">"Search for documents containing 'contract'"</p>
+            <code>SELECT d.source_file, p.content_text FROM documents d JOIN pages p ON d.id = p.document_id WHERE p.content_text ILIKE '%contract%' LIMIT 10</code>
+          </div>
+          <div class="query-example">
+            <p class="query-text">"How many pages are in the database?"</p>
+            <code>SELECT COUNT(*) FROM pages</code>
+          </div>
+        </div>
       </section>
 
-      <section class="tech-stack">
-        <h2>Technology Stack</h2>
-        <ul>
-          <li><strong>Frontend:</strong> SolidJS (reactive UI framework)</li>
-          <li><strong>Database:</strong> SerenDB (PostgreSQL-compatible)</li>
-          <li><strong>Payment Protocol:</strong> x402 micropayments</li>
-          <li><strong>LLM Integration:</strong> MCP (Model Context Protocol) server</li>
-          <li><strong>OCR:</strong> Open-source text extraction tools</li>
-        </ul>
-      </section>
-
-      <section class="source-info">
-        <h2>Getting Started</h2>
-        <p>
-          Fork this project and upload your own documents to create a queryable database:
+      <section class="payment-info">
+        <h2>How Payment Works</h2>
+        <ol>
+          <li>You ask Claude to query the database</li>
+          <li>The system estimates the cost based on expected rows</li>
+          <li>If payment is needed, you'll receive a payment link</li>
+          <li>Complete payment with your wallet (takes ~30 seconds)</li>
+          <li>Query executes and results are returned to Claude</li>
+        </ol>
+        <p class="payment-note">
+          Payments are processed on the Base network for minimal fees (~$0.001 per transaction).
         </p>
-        <ul>
-          <li>Place PDFs and images in the <code>docs/Documents/</code> folder</li>
-          <li>Run the extraction script to process documents with OCR</li>
-          <li>Upload extracted content to your SerenDB instance</li>
-          <li>Register your database as an x402 payment provider</li>
-          <li>Query via MCP server or web interface</li>
-        </ul>
       </section>
 
       <footer class="footer">
         <p>
-          This is an open-source demonstration project.
-          View the source code and documentation on GitHub.
+          Powered by <strong>SerenDB</strong> • <strong>x402</strong> • <strong>Base Network</strong>
+        </p>
+        <p class="open-source-note">
+          Open-source project. Want to host your own database?
+          Visit the <a href="https://github.com/taariq/scan-files-to-serenai-micropayments" target="_blank" rel="noopener">GitHub repo</a>.
         </p>
       </footer>
     </div>
