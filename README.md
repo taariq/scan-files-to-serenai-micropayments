@@ -30,7 +30,7 @@ pnpm install
 2. Switch to **Base network** (Ethereum L2)
 3. Copy your wallet address (starts with `0x`)
 
-**Why Base?** Lower transaction fees (~$0.01) compared to Ethereum mainnet (~$5-50).
+**Why Base?** Lower transaction fees (~$0.002 or less than a cent at 0.027 gwei) compared to Ethereum mainnet (~~$5-50~~).
 
 ### 4. Configure Environment
 
