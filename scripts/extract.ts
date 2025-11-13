@@ -89,9 +89,14 @@ async function processZipFile(zipPath: string, outputDir: string): Promise<void>
 
 export function processFile(inputPath: string, outputPath: string): void {
   try {
-    // Use OCRmyPDF with --force-ocr and --sidecar to extract text directly
-    // This eliminates the need for pdftotext dependency
-    const command = `ocrmypdf --force-ocr --sidecar "${outputPath}" "${inputPath}" /dev/null`
+    // Use OCRmyPDF with quality-enhancing options:
+    // --force-ocr: Force OCR on all images
+    // --deskew: Straighten tilted images
+    // --clean: Remove background noise and artifacts
+    // --language eng: Explicitly set English language model
+    // --oversample 300: Ensure at least 300 DPI for OCR quality
+    // --sidecar: Extract text to separate file
+    const command = `ocrmypdf --force-ocr --deskew --clean --language eng --oversample 300 --sidecar "${outputPath}" "${inputPath}" /dev/null`
     execSync(command, { stdio: 'pipe' })
     console.log(`✓ Extracted: ${outputPath}`)
   } catch (error) {
