@@ -28,15 +28,22 @@ const LandingPage: Component = () => {
           <div class="step">
             <h3>1. Get a Wallet</h3>
             <p>
-              You'll need a crypto wallet to pay for queries. We recommend:
+              You'll need a crypto wallet to pay for queries. We support:
             </p>
             <ul>
-              <li><strong>Coinbase Wallet:</strong> Easy setup, supports Base network</li>
-              <li><strong>MetaMask:</strong> Popular browser extension wallet</li>
-              <li><strong>Rainbow:</strong> Mobile-friendly option</li>
+              <li>
+                <strong>Coinbase Wallet:</strong> Easy setup, built-in Base network support
+                <br />
+                <a href="https://www.coinbase.com/wallet" target="_blank" rel="noopener">Download Coinbase Wallet →</a>
+              </li>
+              <li>
+                <strong>Rabby Wallet:</strong> Advanced features, multi-chain support
+                <br />
+                <a href="https://rabby.io/" target="_blank" rel="noopener">Download Rabby Wallet →</a>
+              </li>
             </ul>
             <p>
-              Make sure your wallet supports the <strong>Base network</strong> (Ethereum L2) for low transaction fees.
+              Both wallets support the <strong>Base network</strong> (Ethereum L2) for low transaction fees.
             </p>
           </div>
 
