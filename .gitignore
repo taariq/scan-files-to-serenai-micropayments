@@ -1,12 +1,11 @@
 # Claude Code guidance file (user-specific)
 CLAUDE.md
 
-# Source documents - not pushed to repo (except README)
+# Docs folder - keep only Documents/README.md for user guidance
+docs/*
+!docs/Documents/
 docs/Documents/*
 !docs/Documents/README.md
-
-# Implementation plans (user-specific)
-docs/plans/
 
 # Processed files and backups
 extracted/
