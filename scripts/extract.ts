@@ -191,8 +191,12 @@ export async function processFile(inputPath: string, outputPath: string, options
 
     // Upload immediately if option is enabled
     if (options.uploadImmediately) {
-      const filename = outputPath.split('/').pop()!
-      await uploadFileToDatabase(outputPath, filename)
+      try {
+        const filename = outputPath.split('/').pop()!
+        await uploadFileToDatabase(outputPath, filename)
+      } catch (uploadError) {
+        console.error(`  ✗ Upload failed for ${outputPath}:`, uploadError)
+      }
     }
   } catch (error) {
     console.error(`✗ Failed to process ${inputPath}:`, error)
