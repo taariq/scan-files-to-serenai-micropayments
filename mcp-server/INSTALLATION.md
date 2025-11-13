@@ -110,7 +110,7 @@ You should see the `execute_query` tool listed.
 
 Try a simple query:
 ```
-Use the execute_query tool to query the Epstein Files database:
+Use the execute_query tool to query the document database:
 - Wallet address: 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb
 - Query: SELECT * FROM documents LIMIT 5
 ```
@@ -204,7 +204,7 @@ pnpm lint
 To update to the latest version:
 
 ```bash
-cd epstein-files-micropayments
+cd scan-files-to-serenai-micropayments
 git pull origin main
 cd mcp-server
 pnpm install
