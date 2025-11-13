@@ -79,10 +79,15 @@ describe('Pricing Configuration', () => {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer test-api-key'
-        },
-        body: expect.stringContaining('basePricePer1000Rows')
+        }
       })
     )
+
+    // Verify the pricing values are correct
+    const callArgs = mockFetch.mock.calls[0]
+    const body = JSON.parse(callArgs[1].body)
+    expect(body.basePricePer1000Rows).toBe(0.001)
+    expect(body.markupMultiplier).toBe(1.5)
   })
 
   it('should skip pricing if provider not yet registered', async () => {

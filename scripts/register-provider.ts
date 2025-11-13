@@ -79,10 +79,9 @@ export async function configurePricing(): Promise<void> {
     return
   }
 
-  // Price equivalent to ad revenue from newspaper publishers covering story
-  // Estimate: $0.10 per 1000 rows (10 cents per complex query)
+  // Micropayment pricing: $0.001 per 1000 rows ($0.000001 per row)
   const pricing: PricingConfig = {
-    basePricePer1000Rows: 0.10,
+    basePricePer1000Rows: 0.001,
     markupMultiplier: 1.5
   }
 
@@ -111,11 +110,22 @@ export async function configurePricing(): Promise<void> {
 if (import.meta.url === `file://${process.argv[1]}`) {
   const email = process.argv[2] || 'admin@example.com'
 
-  registerProvider(email)
-    .then(() => configurePricing())
+  // If provider credentials already exist, skip registration
+  const hasProviderCredentials = process.env.X402_PROVIDER_ID && process.env.X402_API_KEY
+
+  const runFlow = async () => {
+    if (!hasProviderCredentials) {
+      await registerProvider(email)
+    } else {
+      console.log('Provider credentials already exist, skipping registration...')
+    }
+    await configurePricing()
+  }
+
+  runFlow()
     .then(() => process.exit(0))
     .catch(err => {
-      console.error('Registration failed:', err)
+      console.error('Operation failed:', err)
       process.exit(1)
     })
 }
