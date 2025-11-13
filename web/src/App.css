@@ -35,12 +35,13 @@ body {
   font-size: 2.5rem;
   margin-bottom: 1rem;
   font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .tagline {
   font-size: 1.2rem;
-  opacity: 0.95;
-  font-weight: 300;
+  font-weight: 400;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 section {
@@ -96,8 +97,8 @@ a:hover {
 }
 
 .steps {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
   margin-top: 1.5rem;
 }

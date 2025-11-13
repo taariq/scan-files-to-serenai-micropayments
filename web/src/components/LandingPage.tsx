@@ -91,29 +91,6 @@ const LandingPage: Component = () => {
         </div>
       </section>
 
-      <section class="example-queries">
-        <h2>Example Queries</h2>
-        <p>Once connected, try asking Claude:</p>
-        <div class="query-examples">
-          <div class="query-example">
-            <p class="query-text">"How many documents are in the database?"</p>
-            <code>SELECT COUNT(*) FROM documents</code>
-          </div>
-          <div class="query-example">
-            <p class="query-text">"Show me the first 5 documents"</p>
-            <code>SELECT * FROM documents LIMIT 5</code>
-          </div>
-          <div class="query-example">
-            <p class="query-text">"Search for documents containing 'contract'"</p>
-            <code>SELECT d.source_file, p.content_text FROM documents d JOIN pages p ON d.id = p.document_id WHERE p.content_text ILIKE '%contract%' LIMIT 10</code>
-          </div>
-          <div class="query-example">
-            <p class="query-text">"How many pages are in the database?"</p>
-            <code>SELECT COUNT(*) FROM pages</code>
-          </div>
-        </div>
-      </section>
-
       <section class="payment-info">
         <h2>How Payment Works</h2>
         <ol>

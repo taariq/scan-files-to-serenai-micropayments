@@ -125,8 +125,8 @@ const SetupGuide: Component = () => {
         <div class="step-item">
           <h4>Restart Claude Desktop</h4>
           <p>
-            Close and reopen Claude Desktop. The Scan Files MCP server should now be
-            available with the <code>execute_query</code> tool.
+            Close and reopen Claude Desktop. The Scan Files database connector should now be
+            available and ready to query documents.
           </p>
         </div>
       </section>
@@ -175,7 +175,7 @@ const SetupGuide: Component = () => {
 
         <div class="code-block prompt-example">
           <code>
-            I have access to a document database through the execute_query MCP tool.
+            I have access to a document database through the Scan Files connector.
             The database has two tables:
             <br /><br />
             - documents: Contains metadata (id, source_file, original_zip, total_pages, processed_at)
@@ -210,9 +210,9 @@ const SetupGuide: Component = () => {
           <h4>Example Prompt</h4>
           <div class="code-block prompt-example">
             <code>
-              Use the execute_query tool to search the document database
-              for any mentions of "private jet" or "aircraft". Use my wallet
-              address: 0x1234567890abcdef1234567890abcdef12345678
+              Search the document database for any mentions of "private jet"
+              or "aircraft". Use my wallet address:
+              0x1234567890abcdef1234567890abcdef12345678
             </code>
           </div>
         </div>
