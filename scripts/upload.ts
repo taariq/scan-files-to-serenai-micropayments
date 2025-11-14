@@ -2,13 +2,13 @@
 // ABOUTME: Handles document metadata, page content, and duplicate detection
 
 import { readdirSync, readFileSync, existsSync } from 'fs'
-import { join } from 'path'
+import { join, resolve } from 'path'
 import pg from 'pg'
 import { config } from 'dotenv'
 
 const { Pool } = pg
 
-// Load environment variables
+// Load environment variables from repo root
 config()
 
 export interface UploadOptions {
@@ -148,7 +148,7 @@ export async function uploadDocuments(
 
 // CLI entry point
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const inputDir = process.argv[2] || '../extracted'
+  const inputDir = process.argv[2] || resolve(process.cwd(), 'extracted')
 
   console.log('Starting document upload to SerenDB...')
   const result = await uploadDocuments(inputDir)

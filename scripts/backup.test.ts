@@ -7,8 +7,8 @@ import { join } from 'path'
 import { config } from 'dotenv'
 import { createBackup } from './backup'
 
-// Load environment variables from parent directory
-config({ path: '../.env' })
+// Load environment variables from repo root
+config()
 
 describe('Database Backup', () => {
   const testBackupDir = './test-backups'

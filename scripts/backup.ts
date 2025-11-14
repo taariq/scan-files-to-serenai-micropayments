@@ -3,11 +3,11 @@
 
 import { execSync } from 'child_process'
 import { existsSync, mkdirSync } from 'fs'
-import { join } from 'path'
+import { join, resolve } from 'path'
 import { config } from 'dotenv'
 
-// Load environment variables
-config({ path: '../.env' })
+// Load environment variables from repo root
+config()
 
 interface BackupOptions {
   outputDir?: string
@@ -27,8 +27,8 @@ export async function createBackup(options: BackupOptions = {}): Promise<BackupR
     throw new Error('SERENDB_CONNECTION_STRING is required')
   }
 
-  // Use provided directory or default to ../backups
-  const outputDir = options.outputDir || '../backups'
+  // Use provided directory or default to backups/ in repo root
+  const outputDir = options.outputDir || resolve(process.cwd(), 'backups')
 
   // Create backup directory if it doesn't exist
   if (!existsSync(outputDir)) {

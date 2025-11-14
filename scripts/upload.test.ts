@@ -10,8 +10,8 @@ import { uploadDocuments, parseExtractedFile } from './upload'
 
 const { Pool } = pg
 
-// Load environment variables from parent directory
-config({ path: '../.env' })
+// Load environment variables from repo root
+config()
 
 describe('Upload to SerenDB', () => {
   const testInputDir = './test-upload-input'
