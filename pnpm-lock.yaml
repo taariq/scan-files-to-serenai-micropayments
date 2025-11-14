@@ -48,6 +48,9 @@ importers:
       dotenv:
         specifier: ^16.3.1
         version: 16.6.1
+      p-limit:
+        specifier: ^7.2.0
+        version: 7.2.0
       pg:
         specifier: ^8.11.3
         version: 8.16.3
@@ -1386,6 +1389,10 @@ packages:
   p-limit@5.0.0:
     resolution: {integrity: sha512-/Eaoq+QyLSiXQ4lyYV23f14mZRQcXnxfHrN0vCai+ak9G0pp9iEQukIIZq5NccEvwRB8PUnZT0KsOoDCINS1qQ==}
     engines: {node: '>=18'}
+
+  p-limit@7.2.0:
+    resolution: {integrity: sha512-ATHLtwoTNDloHRFFxFJdHnG6n2WUeFjaR8XQMFdKIv0xkXjrER8/iG9iu265jOM95zXHAfv9oTkqhrfbIzosrQ==}
+    engines: {node: '>=20'}
 
   package-json-from-dist@1.0.1:
     resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==}
@@ -3028,6 +3035,10 @@ snapshots:
       mimic-fn: 4.0.0
 
   p-limit@5.0.0:
+    dependencies:
+      yocto-queue: 1.2.2
+
+  p-limit@7.2.0:
     dependencies:
       yocto-queue: 1.2.2
 

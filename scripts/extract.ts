@@ -8,6 +8,7 @@ import { Parse } from 'unzipper'
 import { pipeline } from 'stream/promises'
 import pg from 'pg'
 import { config } from 'dotenv'
+import pLimit from 'p-limit'
 import { parseExtractedFile } from './upload.js'
 
 const { Pool } = pg
@@ -18,6 +19,7 @@ config()
 export interface ExtractOptions {
   dryRun?: boolean
   uploadImmediately?: boolean  // Upload to database after each extraction
+  concurrency?: number  // Number of files to process concurrently (default: 4)
 }
 
 // Database pool for uploading (initialized on first use)
@@ -107,6 +109,7 @@ export async function extractDocuments(
 async function processZipFile(zipPath: string, outputDir: string, options: ExtractOptions = {}): Promise<void> {
   const zipName = zipPath.split('/').pop()!.replace('.zip', '')
   const pendingOperations: Promise<void>[] = []
+  const limit = pLimit(options.concurrency || 4)
 
   return new Promise((resolve, reject) => {
     createReadStream(zipPath)
@@ -146,8 +149,8 @@ async function processZipFile(zipPath: string, outputDir: string, options: Extra
           mkdirSync(extractedDir, { recursive: true })
         }
 
-        // Track this operation
-        const operation = (async () => {
+        // Track this operation with concurrency limit
+        const operation = limit(async () => {
           try {
             await pipeline(entry, createWriteStream(extractedPath))
 
@@ -157,7 +160,7 @@ async function processZipFile(zipPath: string, outputDir: string, options: Extra
             console.error(`Failed to extract ${fileName}:`, err)
             entry.autodrain()
           }
-        })()
+        })
 
         pendingOperations.push(operation)
       })
@@ -178,14 +181,12 @@ export async function processFile(inputPath: string, outputPath: string, options
   }
 
   try {
-    // Use OCRmyPDF with quality-enhancing options:
-    // --force-ocr: Force OCR on all images
-    // --deskew: Straighten tilted images
-    // --clean: Remove background noise and artifacts
-    // --language eng: Explicitly set English language model
-    // --oversample 300: Ensure at least 300 DPI for OCR quality
+    // Use OCRmyPDF with balanced speed/quality settings:
+    // --force-ocr: Force OCR on all images for consistency
+    // --language eng: Use English language model
     // --sidecar: Extract text to separate file
-    const command = `ocrmypdf --force-ocr --deskew --clean --language eng --oversample 300 --sidecar "${outputPath}" "${inputPath}" /dev/null`
+    // Note: Removed --deskew, --clean, --oversample for 2-3x speed improvement
+    const command = `ocrmypdf --force-ocr --language eng --sidecar "${outputPath}" "${inputPath}" /dev/null`
     execSync(command, { stdio: 'pipe' })
     console.log(`✓ Extracted: ${outputPath}`)
 
