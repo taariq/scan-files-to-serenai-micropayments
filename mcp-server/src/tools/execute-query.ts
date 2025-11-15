@@ -78,13 +78,14 @@ export function createExecuteQueryHandler(client: X402Client) {
 
       // Handle successful execution
       if (result.success) {
-        const summary = `Query returned ${result.rowCount} rows. Cost: $${result.cost?.toFixed(6) || '0.000000'}`
+        const actualCost = parseFloat(result.actualCost || '0')
+        const summary = `Query returned ${result.rowCount} rows. Cost: $${actualCost.toFixed(6)}`
         return {
           success: true,
           data: {
             rows: result.rows || [],
             rowCount: result.rowCount || 0,
-            cost: result.cost || 0,
+            cost: actualCost,
             summary
           }
         }
@@ -92,12 +93,14 @@ export function createExecuteQueryHandler(client: X402Client) {
 
       // Handle payment required
       if (result.paymentRequired) {
-        const message = `Payment required to execute this query. Estimated cost: $${result.estimatedCost?.toFixed(6)}. Please complete payment at: ${result.paymentUrl}`
+        const estimatedCost = parseFloat(result.estimatedCost || '0')
+        const paymentUrl = `${process.env.X402_GATEWAY_URL}/payment/${result.paymentId}`
+        const message = `Payment required to execute this query. Estimated cost: $${estimatedCost.toFixed(6)}. Please complete payment at: ${paymentUrl}`
         return {
           success: false,
           paymentRequired: true,
-          paymentUrl: result.paymentUrl,
-          estimatedCost: result.estimatedCost,
+          paymentUrl,
+          estimatedCost,
           message
         }
       }
