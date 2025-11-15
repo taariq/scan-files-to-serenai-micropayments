@@ -1,7 +1,7 @@
 // ABOUTME: Uploads extracted document content to SerenDB
 // ABOUTME: Handles document metadata, page content, and duplicate detection
 
-import { readdirSync, readFileSync, existsSync } from 'fs'
+import { readdirSync, readFileSync, existsSync, statSync } from 'fs'
 import { join, resolve } from 'path'
 import pg from 'pg'
 import { config } from 'dotenv'
@@ -10,6 +10,14 @@ const { Pool } = pg
 
 // Load environment variables from repo root
 config()
+
+// Validate required environment variables
+if (!process.env.SERENDB_CONNECTION_STRING) {
+  console.error('Error: SERENDB_CONNECTION_STRING environment variable is required')
+  console.error('Please set it in your .env file or environment.')
+  console.error('Example: SERENDB_CONNECTION_STRING=postgresql://user:password@host:5432/dbname')
+  process.exit(1)
+}
 
 export interface UploadOptions {
   dryRun?: boolean
@@ -56,9 +64,10 @@ export function parseExtractedFile(filename: string, content: string): ParsedDoc
     }
   }
 
-  // Split content into pages (using double newline as separator)
+  // Split content into pages (using form-feed character from pdftotext)
+  // Form-feed (\f) is the standard page separator from pdftotext
   const pages = content
-    .split('\n\n')
+    .split('\f')
     .map(p => p.trim())
     .filter(p => p.length > 0)
 
@@ -69,14 +78,45 @@ export function parseExtractedFile(filename: string, content: string): ParsedDoc
   }
 }
 
+/**
+ * Recursively find all .txt files in directory tree
+ */
+function findTextFiles(dir: string): string[] {
+  const results: string[] = []
+
+  try {
+    const entries = readdirSync(dir)
+
+    for (const entry of entries) {
+      const fullPath = join(dir, entry)
+
+      try {
+        const stat = statSync(fullPath)
+
+        if (stat.isDirectory()) {
+          // Recursively search subdirectories
+          results.push(...findTextFiles(fullPath))
+        } else if (stat.isFile() && entry.endsWith('.txt')) {
+          results.push(fullPath)
+        }
+      } catch (err) {
+        console.warn(`Warning: Could not access ${fullPath}:`, err)
+        continue
+      }
+    }
+  } catch (err) {
+    console.error(`Error reading directory ${dir}:`, err)
+  }
+
+  return results
+}
+
 export async function uploadDocuments(
   inputDir: string,
   options: UploadOptions = {}
 ): Promise<UploadResult> {
-  // Find all extracted text files
-  const txtFiles = readdirSync(inputDir)
-    .filter(f => f.endsWith('.txt'))
-    .map(f => join(inputDir, f))
+  // Find all extracted text files (including nested directories)
+  const txtFiles = findTextFiles(inputDir)
 
   if (options.dryRun) {
     return {
