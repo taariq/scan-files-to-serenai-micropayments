@@ -24,13 +24,23 @@ pnpm install
 2. Create a new database
 3. Copy your connection string from the console
 
-### 3. Get a Wallet for Receiving Payments
+### 3. Set Up Wallets
 
+You'll need **two wallets** on Base network:
+
+**Provider Wallet** (receives payments):
 1. Install [Coinbase Wallet](https://www.coinbase.com/wallet) or another Base-compatible wallet
 2. Switch to **Base network** (Ethereum L2)
 3. Copy your wallet address (starts with `0x`)
+4. This wallet receives query payments - no funding required
 
-**Why Base?** Lower transaction fees (~$0.002 or less than a cent at 0.027 gwei) compared to Ethereum mainnet (~~$5-50~~).
+**Agent Wallet** (pays for queries):
+1. Create a separate wallet for the AI agent
+2. Fund with USDC on Base network (for automatic payments)
+3. Keep the private key secure - it will be used by MCP server
+4. Recommended: Use a dedicated wallet for testing with small amounts
+
+**Why Base?** Lower transaction fees (~$0.002 or less than a cent at 0.027 gwei) compared to Ethereum mainnet.
 
 ### 4. Configure Environment
 
@@ -52,8 +62,14 @@ X402_GATEWAY_URL=https://x402.serendb.com
 X402_PROVIDER_ID=
 X402_API_KEY=
 
-# Your wallet address from step 3
+# Provider wallet (receives payments) - from step 3
 PROVIDER_WALLET_ADDRESS=0x...
+
+# Agent wallet private key (OPTIONAL - for automatic payments)
+# WARNING: Store securely! This gives full control over agent wallet
+# Required for MCP server to automatically sign EIP-3009 payments
+# If not set, queries will require manual payment signing
+# AGENT_PRIVATE_KEY=0x...
 ```
 
 ### 5. Upload and Process Documents
@@ -106,12 +122,15 @@ Add to Claude Desktop config (`~/Library/Application Support/Claude/claude_deskt
       "env": {
         "X402_GATEWAY_URL": "https://x402.serendb.com",
         "X402_PROVIDER_ID": "your-provider-id",
-        "X402_API_KEY": "your-api-key"
+        "X402_API_KEY": "your-api-key",
+        "AGENT_PRIVATE_KEY": "0x..."
       }
     }
   }
 }
 ```
+
+**Security Note**: `AGENT_PRIVATE_KEY` enables automatic EIP-3009 payment signing. Without it, queries will return payment requirements for manual signing. The agent wallet must be funded with USDC on Base.
 
 Restart Claude Desktop and test:
 ```
@@ -140,12 +159,19 @@ Query the database for all documents
 
 ## How Micropayments Work
 
-1. **Query Request**: Claude Desktop sends query via MCP server
-2. **Payment Check**: x402 gateway checks if user has credits
-3. **HTTP 402**: If insufficient credits, returns payment URL
-4. **Payment**: User pays via Base network (~$0.01 per 1000 rows)
-5. **Execute**: Gateway executes query and returns results
-6. **Settlement**: Provider receives payment to their wallet
+The Coinbase x402 protocol uses EIP-3009 authorization signatures for per-query payments:
+
+1. **Query Request**: Claude Desktop sends SQL query via MCP server
+2. **HTTP 402 Response**: Gateway returns PaymentRequirements with cost estimate
+3. **EIP-3009 Signing**: MCP server signs USDC transfer authorization using agent wallet
+4. **X-PAYMENT Header**: Signed authorization sent as base64-encoded header
+5. **Settlement**: Gateway verifies signature and settles USDC transfer on Base
+6. **Query Execution**: Database query executes and results returned
+7. **Provider Payment**: Provider receives USDC in their wallet
+
+**Credit System**: If a paid query fails (e.g., invalid SQL after payment), the gateway issues a credit that automatically applies to the next query, ensuring fair billing.
+
+**Cost**: ~$0.01 per 1000 rows + ~$0.01 Base network fee = ~$0.02 total per query
 
 ## Development Commands
 
@@ -207,11 +233,23 @@ This codebase is designed to be forked and customized:
 
 ## Security
 
+**Environment Variables**:
 - Never commit `.env` files with real credentials
 - Use environment variables for all secrets
+- Add `.env` to `.gitignore` (already configured)
+
+**Agent Wallet Private Key**:
+- `AGENT_PRIVATE_KEY` gives full control over agent wallet
+- Store securely - treat like a password
+- Use a dedicated wallet for AI agents (not your main wallet)
+- Fund with small amounts of USDC for testing
+- Consider hardware wallet or secure key management for production
+
+**General**:
 - Wallet addresses are public - only use addresses you control
 - MCP server runs locally (not exposed publicly)
-- x402 gateway validates all queries (read-only)
+- x402 gateway validates all queries (read-only SELECT only)
+- Provider wallet doesn't need funding (receives payments only)
 
 ## Tech Stack
 
