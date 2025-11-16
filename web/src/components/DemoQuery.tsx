@@ -14,12 +14,19 @@ interface PaymentRequired {
   query: string
 }
 
+interface CostEstimate {
+  estimatedRows: number
+  estimatedCost: number
+}
+
 const DemoQuery: Component = () => {
   const [walletAddress, setWalletAddress] = createSignal('')
   const [query, setQuery] = createSignal('')
   const [loading, setLoading] = createSignal(false)
+  const [estimating, setEstimating] = createSignal(false)
   const [result, setResult] = createSignal<QueryResult | null>(null)
   const [paymentRequired, setPaymentRequired] = createSignal<PaymentRequired | null>(null)
+  const [costEstimate, setCostEstimate] = createSignal<CostEstimate | null>(null)
   const [error, setError] = createSignal<string | null>(null)
 
   const exampleQueries = [
@@ -28,6 +35,45 @@ const DemoQuery: Component = () => {
     "SELECT d.source_file, COUNT(*) as page_count FROM pages p JOIN documents d ON p.document_id = d.id GROUP BY d.source_file",
     "SELECT * FROM documents WHERE source_file LIKE '%.pdf'"
   ]
+
+  // Pricing: $0.01 per 1000 rows
+  const PRICE_PER_1000_ROWS = 0.01
+
+  const estimateCost = async () => {
+    setEstimating(true)
+    setCostEstimate(null)
+    setError(null)
+
+    try {
+      const response = await fetch('/api/estimate-cost', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: query()
+        })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        const estimatedRows = data.estimatedRows || 0
+        const estimatedCost = (estimatedRows / 1000) * PRICE_PER_1000_ROWS
+
+        setCostEstimate({
+          estimatedRows,
+          estimatedCost
+        })
+      } else {
+        const errorData = await response.json()
+        setError(errorData.error || `Error estimating cost: ${response.status}`)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to estimate cost')
+    } finally {
+      setEstimating(false)
+    }
+  }
 
   const executeQuery = async () => {
     setLoading(true)
@@ -66,6 +112,12 @@ const DemoQuery: Component = () => {
 
   const setExampleQuery = (exampleQuery: string) => {
     setQuery(exampleQuery)
+    setCostEstimate(null) // Clear estimate when query changes
+  }
+
+  const handleQueryInput = (value: string) => {
+    setQuery(value)
+    setCostEstimate(null) // Clear estimate when query changes
   }
 
   return (
@@ -101,7 +153,7 @@ const DemoQuery: Component = () => {
             class="input-field query-textarea"
             placeholder="SELECT * FROM documents LIMIT 10"
             value={query()}
-            onInput={(e) => setQuery(e.currentTarget.value)}
+            onInput={(e) => handleQueryInput(e.currentTarget.value)}
             rows={4}
           />
           <p class="input-hint">
@@ -123,14 +175,39 @@ const DemoQuery: Component = () => {
           </div>
         </div>
 
-        <button
-          class="execute-button"
-          onClick={executeQuery}
-          disabled={loading() || !walletAddress() || !query()}
-        >
-          {loading() ? 'Executing...' : 'Execute Query'}
-        </button>
+        <div class="button-group">
+          <button
+            class="estimate-button"
+            onClick={estimateCost}
+            disabled={estimating() || !query()}
+          >
+            {estimating() ? 'Estimating...' : 'Estimate Cost'}
+          </button>
+
+          <button
+            class="execute-button"
+            onClick={executeQuery}
+            disabled={loading() || !walletAddress() || !query()}
+          >
+            {loading() ? 'Executing...' : 'Execute Query'}
+          </button>
+        </div>
       </div>
+
+      {costEstimate() && (
+        <div class="result-section estimate-section">
+          <h3>Cost Estimate</h3>
+          <p class="estimate-rows">
+            Estimated rows: <strong>~{Math.round(costEstimate()!.estimatedRows)}</strong>
+          </p>
+          <p class="estimate-cost">
+            Estimated cost: <strong>${costEstimate()!.estimatedCost.toFixed(6)}</strong>
+          </p>
+          <p class="estimate-info">
+            This is an estimate based on query analysis. Actual cost may vary.
+          </p>
+        </div>
+      )}
 
       {loading() && (
         <div class="result-section loading-section">

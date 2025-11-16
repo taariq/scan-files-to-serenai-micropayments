@@ -29,7 +29,8 @@ const x402Client = new X402Client({
   gatewayUrl: process.env.X402_GATEWAY_URL!,
   providerId: process.env.X402_PROVIDER_ID!,
   apiKey: process.env.X402_API_KEY!,
-  agentPrivateKey: process.env.AGENT_PRIVATE_KEY
+  agentPrivateKey: process.env.AGENT_PRIVATE_KEY,
+  databaseUrl: process.env.SERENDB_CONNECTION_STRING
 })
 
 // Warn if agent private key not configured
@@ -38,6 +39,14 @@ if (!process.env.AGENT_PRIVATE_KEY) {
   console.error('   Set AGENT_PRIVATE_KEY in .env or Claude Desktop config to enable automatic payments')
 } else {
   console.error('✓ Agent wallet configured for automatic EIP-3009 payment signing')
+}
+
+// Warn if database URL not configured
+if (!process.env.SERENDB_CONNECTION_STRING) {
+  console.error('⚠️  SERENDB_CONNECTION_STRING not set - cost estimation disabled')
+  console.error('   Set SERENDB_CONNECTION_STRING in .env to enable local cost estimation')
+} else {
+  console.error('✓ Database connection configured for cost estimation')
 }
 
 // Create tool handlers

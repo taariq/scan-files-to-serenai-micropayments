@@ -2,12 +2,16 @@
 // ABOUTME: Handles PaymentRequirements, signature generation, and X-PAYMENT headers
 
 import { Wallet, TypedDataDomain, TypedDataField } from 'ethers'
+import pg from 'pg'
+
+const { Pool } = pg
 
 export interface X402Config {
   gatewayUrl: string
   providerId: string
   apiKey: string
   agentPrivateKey?: string  // Optional: for automatic payment signing
+  databaseUrl?: string  // Optional: for local cost estimation
 }
 
 export interface PaymentRequirement {
@@ -114,6 +118,7 @@ export class X402Client {
   private providerId: string
   private apiKey: string
   private wallet?: Wallet
+  private dbPool?: pg.Pool
 
   constructor(config: X402Config) {
     if (!config.gatewayUrl) {
@@ -134,6 +139,11 @@ export class X402Client {
     if (config.agentPrivateKey) {
       this.wallet = new Wallet(config.agentPrivateKey)
     }
+
+    // Initialize database pool if connection string provided
+    if (config.databaseUrl) {
+      this.dbPool = new Pool({ connectionString: config.databaseUrl })
+    }
   }
 
   validateQuery(query: string): void {
@@ -144,6 +154,32 @@ export class X402Client {
       if (regex.test(upperQuery)) {
         throw new Error(`Forbidden SQL operation: ${operation}`)
       }
+    }
+  }
+
+  /**
+   * Estimate query cost using EXPLAIN
+   * Returns estimated number of rows that will be returned
+   */
+  private async estimateCost(query: string): Promise<number> {
+    if (!this.dbPool) {
+      // If no database connection, return default estimate
+      return 0
+    }
+
+    try {
+      const explainQuery = `EXPLAIN (FORMAT JSON) ${query}`
+      const result = await this.dbPool.query(explainQuery)
+
+      // Parse EXPLAIN output to get row estimate
+      const plan = result.rows[0]['QUERY PLAN'][0]
+      const estimatedRows = plan?.Plan?.['Plan Rows'] || 0
+
+      return estimatedRows
+    } catch (error) {
+      console.error('Failed to estimate query cost:', error)
+      // Return 0 if estimation fails - gateway will handle it
+      return 0
     }
   }
 
@@ -197,9 +233,10 @@ export class X402Client {
 
   /**
    * Execute query with Coinbase x402 payment protocol
-   * 1. First request without payment -> returns 402 with PaymentRequirements
-   * 2. Sign authorization and retry with X-PAYMENT header
-   * 3. Gateway settles payment and executes query
+   * 1. Estimate cost locally using EXPLAIN
+   * 2. First request with estimate -> returns 402 with PaymentRequirements
+   * 3. Sign authorization and retry with X-PAYMENT header
+   * 4. Gateway settles payment and executes query
    */
   async executeQuery(
     query: string,
@@ -216,7 +253,10 @@ export class X402Client {
     }
 
     try {
-      // Step 1: Initial request without payment
+      // Step 1: Estimate cost locally
+      const estimatedRows = await this.estimateCost(query)
+
+      // Step 2: Initial request with estimate
       const initialResponse = await fetch(`${this.gatewayUrl}/api/query`, {
         method: 'POST',
         headers: {
@@ -226,7 +266,8 @@ export class X402Client {
         body: JSON.stringify({
           sql: query,
           agentWallet: agentWallet,
-          providerId: this.providerId
+          providerId: this.providerId,
+          estimatedRows: estimatedRows
         })
       })
 
@@ -267,7 +308,8 @@ export class X402Client {
           body: JSON.stringify({
             sql: query,
             agentWallet: agentWallet,
-            providerId: this.providerId
+            providerId: this.providerId,
+            estimatedRows: estimatedRows
           })
         })
 
