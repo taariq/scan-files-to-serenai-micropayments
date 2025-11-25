@@ -8,13 +8,20 @@
     "extract": "tsx scripts/extract.ts",
     "upload": "tsx scripts/upload.ts",
     "backup": "tsx scripts/backup.ts",
-    "register": "tsx scripts/register-provider.ts"
+    "register": "tsx scripts/register-provider.ts",
+    "update-provider": "tsx scripts/update-provider.ts"
   },
   "devDependencies": {
     "tsx": "^4.7.0",
     "typescript": "^5.3.3"
   },
-  "keywords": ["micropayments", "x402", "serendb", "mcp", "ai-agents"],
+  "keywords": [
+    "micropayments",
+    "x402",
+    "serendb",
+    "mcp",
+    "ai-agents"
+  ],
   "author": "",
   "license": "MIT"
 }
