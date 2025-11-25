@@ -111,6 +111,69 @@ function findTextFiles(dir: string): string[] {
   return results
 }
 
+async function ensureSchema(pool: pg.Pool): Promise<void> {
+  // Check if documents table exists
+  const tableCheck = await pool.query(`
+    SELECT EXISTS (
+      SELECT FROM information_schema.tables
+      WHERE table_schema = 'public'
+      AND table_name = 'documents'
+    );
+  `)
+
+  const tablesExist = tableCheck.rows[0].exists
+
+  if (!tablesExist) {
+    console.log('Creating database schema...')
+
+    // Create documents table
+    await pool.query(`
+      CREATE TABLE documents (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        source_file TEXT NOT NULL,
+        original_zip TEXT NOT NULL,
+        total_pages INTEGER NOT NULL,
+        processed_at TIMESTAMP DEFAULT NOW(),
+        UNIQUE(source_file)
+      );
+    `)
+    console.log('✓ Created documents table')
+
+    // Create pages table
+    await pool.query(`
+      CREATE TABLE pages (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        document_id UUID NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
+        page_number INTEGER NOT NULL,
+        content_text TEXT NOT NULL,
+        ocr_confidence DECIMAL(5,2),
+        created_at TIMESTAMP DEFAULT NOW(),
+        UNIQUE(document_id, page_number)
+      );
+    `)
+    console.log('✓ Created pages table')
+
+    // Create indexes
+    await pool.query(`
+      CREATE INDEX idx_pages_content_fts ON pages
+        USING GIN (to_tsvector('english', content_text));
+    `)
+    console.log('✓ Created full-text search index')
+
+    await pool.query(`
+      CREATE INDEX idx_pages_document_id ON pages(document_id);
+    `)
+    console.log('✓ Created pages document_id index')
+
+    await pool.query(`
+      CREATE INDEX idx_documents_source_file ON documents(source_file);
+    `)
+    console.log('✓ Created documents source_file index')
+
+    console.log('Schema created successfully!\n')
+  }
+}
+
 export async function uploadDocuments(
   inputDir: string,
   options: UploadOptions = {}
@@ -138,6 +201,9 @@ export async function uploadDocuments(
       rejectUnauthorized: false
     }
   })
+
+  // Ensure schema exists before uploading
+  await ensureSchema(pool)
 
   let uploaded = 0
   let skipped = 0
