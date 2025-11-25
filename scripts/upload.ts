@@ -1,7 +1,7 @@
 // ABOUTME: Uploads extracted document content to SerenDB
 // ABOUTME: Handles document metadata, page content, and duplicate detection
 
-import { readdirSync, readFileSync, existsSync, statSync } from 'fs'
+import { readdirSync, readFileSync, statSync } from 'fs'
 import { join, resolve } from 'path'
 import pg from 'pg'
 import { config } from 'dotenv'
@@ -133,9 +133,14 @@ export async function uploadDocuments(
 
   let uploaded = 0
   let skipped = 0
+  const totalFiles = txtFiles.length
+  const startTime = Date.now()
+
+  console.log(`Found ${totalFiles} files to process\n`)
 
   try {
-    for (const filePath of txtFiles) {
+    for (let i = 0; i < txtFiles.length; i++) {
+      const filePath = txtFiles[i]
       const filename = filePath.split('/').pop()!
       const content = readFileSync(filePath, 'utf-8')
 
@@ -148,8 +153,17 @@ export async function uploadDocuments(
       )
 
       if (existingDoc.rows.length > 0) {
-        console.log(`⊘ Skipped: ${parsed.sourceFile} (already exists)`)
         skipped++
+
+        // Show progress every 100 files
+        if ((uploaded + skipped) % 100 === 0) {
+          const processed = uploaded + skipped
+          const percent = ((processed / totalFiles) * 100).toFixed(1)
+          const rate = (processed / (Date.now() - startTime) * 1000).toFixed(1)
+          const remaining = Math.ceil((totalFiles - processed) / parseFloat(rate))
+
+          console.log(`Progress: ${processed}/${totalFiles} (${percent}%) | Uploaded: ${uploaded} | Skipped: ${skipped} | Rate: ${rate}/sec | ETA: ${remaining}s`)
+        }
         continue
       }
 
@@ -172,8 +186,17 @@ export async function uploadDocuments(
         )
       }
 
-      console.log(`✓ Uploaded: ${parsed.sourceFile} (${parsed.pages.length} pages)`)
       uploaded++
+
+      // Show progress every 100 files
+      if ((uploaded + skipped) % 100 === 0) {
+        const processed = uploaded + skipped
+        const percent = ((processed / totalFiles) * 100).toFixed(1)
+        const rate = (processed / (Date.now() - startTime) * 1000).toFixed(1)
+        const remaining = Math.ceil((totalFiles - processed) / parseFloat(rate))
+
+        console.log(`Progress: ${processed}/${totalFiles} (${percent}%) | Uploaded: ${uploaded} | Skipped: ${skipped} | Rate: ${rate}/sec | ETA: ${remaining}s`)
+      }
     }
   } finally {
     await pool.end()
