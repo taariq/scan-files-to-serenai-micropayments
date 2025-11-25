@@ -108,7 +108,13 @@ export async function configurePricing(): Promise<void> {
 
 // CLI entry point
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const email = process.argv[2] || 'admin@example.com'
+  const email = process.argv[2]
+
+  if (!email) {
+    console.error('Error: Please provide an email address.')
+    console.error('Usage: pnpm register <email>')
+    process.exit(1)
+  }
 
   // If provider credentials already exist, skip registration
   const hasProviderCredentials = process.env.X402_PROVIDER_ID && process.env.X402_API_KEY
