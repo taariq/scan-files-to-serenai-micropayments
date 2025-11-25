@@ -128,7 +128,10 @@ export async function uploadDocuments(
 
   // Connect to database
   const pool = new Pool({
-    connectionString: process.env.SERENDB_CONNECTION_STRING
+    connectionString: process.env.SERENDB_CONNECTION_STRING,
+    ssl: {
+      rejectUnauthorized: false
+    }
   })
 
   let uploaded = 0
