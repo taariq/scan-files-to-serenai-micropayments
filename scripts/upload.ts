@@ -127,8 +127,13 @@ export async function uploadDocuments(
   }
 
   // Connect to database
+  // Remove SSL mode from connection string if present, we'll handle it explicitly
+  const connectionString = process.env.SERENDB_CONNECTION_STRING!
+    .replace(/[?&]sslmode=[^&]*/g, '')
+    .replace(/[?&]channel_binding=[^&]*/g, '')
+
   const pool = new Pool({
-    connectionString: process.env.SERENDB_CONNECTION_STRING,
+    connectionString,
     ssl: {
       rejectUnauthorized: false
     }
