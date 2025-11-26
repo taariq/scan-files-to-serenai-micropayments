@@ -1,5 +1,5 @@
 // ABOUTME: Updates provider information on x402 gateway
-// ABOUTME: Allows updating provider name, email, wallet address, and connection string
+// ABOUTME: Allows updating provider name, wallet address, and connection string (email is immutable)
 
 import dotenv from 'dotenv'
 
@@ -7,7 +7,6 @@ dotenv.config()
 
 export interface ProviderUpdate {
     name?: string
-    email?: string
     walletAddress?: string
     connectionString?: string
 }
@@ -59,10 +58,11 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
     if (args.length === 0) {
         console.error('Error: Please provide at least one field to update.')
-        console.error('Usage: pnpm update-provider [--name <name>] [--email <email>] [--wallet <address>] [--connection <string>]')
+        console.error('Usage: pnpm update-provider [--name <name>] [--wallet <address>] [--connection <string>]')
+        console.error('\nNote: Email cannot be changed after registration.')
         console.error('\nExamples:')
         console.error('  pnpm update-provider --name "New Provider Name"')
-        console.error('  pnpm update-provider --email admin@newdomain.com --name "Updated Name"')
+        console.error('  pnpm update-provider --wallet 0x1234...5678')
         process.exit(1)
     }
 
@@ -81,9 +81,6 @@ if (import.meta.url === `file://${process.argv[1]}`) {
             case '--name':
                 updates.name = value
                 break
-            case '--email':
-                updates.email = value
-                break
             case '--wallet':
                 updates.walletAddress = value
                 break
@@ -92,7 +89,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
                 break
             default:
                 console.error(`Error: Unknown flag ${flag}`)
-                console.error('Valid flags: --name, --email, --wallet, --connection')
+                console.error('Valid flags: --name, --wallet, --connection')
                 process.exit(1)
         }
     }
